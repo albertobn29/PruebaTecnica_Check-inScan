@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb
+    environment:
+      - MYSQL_USER="root1"
+      - MYSQL_ROOT_PASSWORD="root1"
+      - MYSQL_DATABASE="productos"
+    ports:
+      - 3306:3306
+
+  app:
+    build: .
+    depends_on:
+      - mariadb
+    links:
+      - mariadb
+    ports:
+      - 3500:3500
