@@ -13,12 +13,12 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
--- Volcando estructura de base de datos para productos
-CREATE DATABASE IF NOT EXISTS `productos` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
-USE `productos`;
+-- Volcando estructura de base de datos para Productos
+CREATE DATABASE IF NOT EXISTS `productosdb` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+USE `productosdb`;
 
--- Volcando estructura para tabla productos.productos
-CREATE TABLE IF NOT EXISTS `productos` (
+-- Volcando estructura para tabla productosdb.Productos
+CREATE TABLE IF NOT EXISTS `Productos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `titulo` varchar(255) DEFAULT NULL,
   `descripcion` varchar(255) DEFAULT NULL,
@@ -28,22 +28,22 @@ CREATE TABLE IF NOT EXISTS `productos` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 
--- Volcando datos para la tabla productos.productos: ~2 rows (aproximadamente)
-DELETE FROM `productos`;
-/*!40000 ALTER TABLE `productos` DISABLE KEYS */;
-INSERT INTO `productos` (`id`, `titulo`, `descripcion`, `estado`, `createdAt`, `updatedAt`) VALUES
-	(5, 'pan', 'Alimento que consiste en una masa de harina, por lo común de trigo, levadura y agua, cocida en un horno.', 1, '2024-03-27 17:31:40', '2024-03-27 17:31:40'),
-	(6, 'baguette', 'Barra de pan estrecha y alargada.', 0, '2024-03-27 17:31:40', '2024-03-27 17:31:40');
-/*!40000 ALTER TABLE `productos` ENABLE KEYS */;
+-- Volcando datos para la tabla productosdb.Productos: ~2 rows (aproximadamente)
+DELETE FROM `Productos`;
+/*!40000 ALTER TABLE `Productos` DISABLE KEYS */;
+INSERT INTO `Productos` (`id`, `titulo`, `descripcion`, `estado`, `createdAt`, `updatedAt`) VALUES
+	(1, 'pan', 'Alimento que consiste en una masa de harina, por lo común de trigo, levadura y agua, cocida en un horno.', 1, '2024-03-27 17:31:40', '2024-03-27 17:31:40'),
+	(2, 'baguette', 'Barra de pan estrecha y alargada.', 0, '2024-03-27 17:31:40', '2024-03-27 17:31:40');
+/*!40000 ALTER TABLE `Productos` ENABLE KEYS */;
 
--- Volcando estructura para tabla productos.sequelizemeta
+-- Volcando estructura para tabla productosdb.sequelizemeta
 CREATE TABLE IF NOT EXISTS `sequelizemeta` (
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`name`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Volcando datos para la tabla productos.sequelizemeta: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla Productos.sequelizemeta: ~1 rows (aproximadamente)
 DELETE FROM `sequelizemeta`;
 /*!40000 ALTER TABLE `sequelizemeta` DISABLE KEYS */;
 INSERT INTO `sequelizemeta` (`name`) VALUES

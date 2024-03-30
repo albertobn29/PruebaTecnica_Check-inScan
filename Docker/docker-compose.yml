@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  database:
+    image: mariadb
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_USER: "alberto"
+      MYSQL_PASSWORD: "alberto"
+      MYSQL_DATABASE: "productosdb"
+    ports:
+      - 3306:3306
+    command: --init-file /docker-entrypoint-initdb.d/1.sql
+    volumes:
+      - "../src/db/sql/Productos.sql:/docker-entrypoint-initdb.d/1.sql"
+
+  app:
+    build:
+      context: ../
+      dockerfile: ./Docker/Dockerfile
+    depends_on:
+      - database
+    links:
+      - database
+    ports:
+      - 3500:3500
+    restart: on-failure:8
+

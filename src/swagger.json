@@ -121,7 +121,7 @@
             }
         },
         "/producto/{id}": {
-            "post": {
+            "get": {
                 "tags": [
                     "Producto"
                 ],

@@ -3,7 +3,7 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 
 const swaggerDocument = require('./swagger.json')
-const { sequelize } = require('./db/models/index');
+const { conectarDB } = require('./db/models/index');
 const routes = require('./routes/routes');
 
 const PORT = process.env.NODE_PORT || 3500;
@@ -24,7 +24,6 @@ app.get('**', (req, res) => {
 app.listen(PORT, function () {
     console.log(`App listening on http://localhost:${PORT}`);
 
-    sequelize.authenticate().then(() => {
-        console.log('Conectado a la base de datos');
-    })
+    conectarDB(5);
+
 });
