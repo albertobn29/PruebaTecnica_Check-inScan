@@ -11,7 +11,6 @@ function tokenValidator(req, res, next) {
             req.autorizado = true;
         } else {
             res.status(401).json({ mgs: "TOKEN NO AUTORIZADO" })
-            // return;
         }
         next();
 
@@ -20,4 +19,17 @@ function tokenValidator(req, res, next) {
     }
 }
 
-module.exports = { tokenValidator }
+function isAdmin (req, res, next) { 
+    var token = req.headers.token;
+    try {
+        const user = jwt.verify(token, process.env.JWT_SECRET);
+        if(!user.isAdmin){
+            res.status(403).json({ mgs: `El usuario: ${user.email} NO es Administrador` })
+        }
+        next();
+    } catch (err){
+        res.status(401).json({ msg: "TOKEN NO VALIDO" })
+    }
+ }
+
+module.exports = { tokenValidator, isAdmin }

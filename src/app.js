@@ -17,7 +17,7 @@ app.use('/api', routes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.get('**', (req, res) => {
+app.use((req, res) => {
     res.status(404).send({ msg: "Ruta no encontrada" })
 });
 

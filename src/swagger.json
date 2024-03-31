@@ -3,7 +3,7 @@
     "info": {
         "title": "API de productos",
         "description": "API de gestion de productos",
-        "version": "0.1.0"
+        "version": "0.2.0"
     },
     "servers": [
         {
@@ -37,7 +37,149 @@
                         }
                     },
                     "500": {
-                        "description": "Ha habido un error en el servidor",
+                        "$ref": "#/components/responses/ServerError"
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Login"
+                ],
+                "summary": "Autenticación del usuario",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "El usuario es validado y se devuelve el token de autenticación",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "usuario": {
+                                            "$ref": "#/components/schemas/Usuarios"
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "La contraseña del usuario no es valida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "usuario": {
+                                            "$ref": "#/components/schemas/Usuarios"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerError"
+                    }
+                }
+            }
+        },
+        "/usuarios": {
+            "get": {
+                "tags": [
+                    "Usuario"
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "summary": "Listado de usuarios",
+                "responses": {
+                    "200": {
+                        "description": "Listado de usuarios",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "productos": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Usuarios"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerError"
+                    }
+                }
+            }
+        },
+        "/usuario/{id}": {
+            "get": {
+                "tags": [
+                    "Usuario"
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "summary": "Buscar un usuario en función de su ID",
+                "responses": {
+                    "200": {
+                        "description": "Devuelve el usuario buscado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "usuario": {
+                                            "$ref": "#/components/schemas/Usuarios"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Si el usuario no es encontrado",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -50,6 +192,295 @@
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerError"
+                    }
+                }
+            }
+        },
+        "/usuario": {
+            "post": {
+                "tags": [
+                    "Usuario"
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "summary": "Buscar un usuario en función de su Correo",
+                "requestBody": {
+                    "descripcion": "Correo del usuario",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Devuelve el usuario buscado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "usuario": {
+                                            "$ref": "#/components/schemas/Usuarios"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Si el usuario no es encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerError"
+                    }
+                }
+            }
+        },
+        "/createUsuario": {
+            "post": {
+                "tags": [
+                    "Usuario"
+                ],
+                "summary": "Crea un usuario",
+                "requestBody": {
+                    "descripcion": "Definición del usuario a crear",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string"
+                                    },
+                                    "apellidos": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "isAdmin": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Devuelve el usuario creado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "usuario": {
+                                            "$ref": "#/components/schemas/Usuarios"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Si el usuario ya existia con anterioridad",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerError"
+                    }
+                }
+            }
+        },
+        "/updateUsuario": {
+            "put": {
+                "tags": [
+                    "Usuario"
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "summary": "Modifica un usuario",
+                "requestBody": {
+                    "descripcion": "Definición del usuario a modificar",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string"
+                                    },
+                                    "apellidos": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "isAdmin": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Devuelve el usuario modificado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "usuario": {
+                                            "$ref": "#/components/schemas/Usuarios"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Si no se ha encontrado el usuario a modificar",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/NoAdmin"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerError"
+                    }
+                }
+            }
+        },
+        "/deleteUsuario/{id}": {
+            "delete": {
+                "tags": [
+                    "Usuario"
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "summary": "Elimina un usuario",
+                "responses": {
+                    "200": {
+                        "description": "Si el usuario ha sido eliminado sin problemas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Si no se ha encontrado el usuario a eliminar",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/NoAdmin"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerError"
                     }
                 }
             }
@@ -85,37 +516,10 @@
                         }
                     },
                     "401": {
-                        "description": "Token incorrecto",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "example": {
-                                        "msg": "TOKEN NO ENCONTRADO"
-                                    }
-                                }
-                            }
-                        }
+                        "$ref": "#/components/responses/Unauthorized"
                     },
                     "500": {
-                        "description": "Ha habido un error en el servidor",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        "$ref": "#/components/responses/ServerError"
                     }
                 }
             }
@@ -148,43 +552,39 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Productos"
+                                    "type": "object",
+                                    "properties": {
+                                        "producto": {
+                                            "$ref": "#/components/schemas/Productos"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Si no se ha encontrado el producto",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
                                 }
                             }
                         }
                     },
                     "401": {
-                        "description": "Token incorrecto",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "example": {
-                                        "msg": "TOKEN NO ENCONTRADO"
-                                    }
-                                }
-                            }
-                        }
+                        "$ref": "#/components/responses/Unauthorized"
                     },
                     "500": {
-                        "description": "Ha habido un error en el servidor",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        "$ref": "#/components/responses/ServerError"
                     }
                 }
             }
@@ -223,24 +623,6 @@
                     }
                 },
                 "responses": {
-                    "201": {
-                        "description": "Producto con su ID",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "producto": {
-                                            "$ref": "#/components/schemas/Productos"
-                                        },
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
                     "200": {
                         "description": "Producto con su ID",
                         "content": {
@@ -260,12 +642,15 @@
                         }
                     },
                     "400": {
-                        "description": "No se informa del Título del producto",
+                        "description": "Si el producto ya existia con anterioridad",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "object",
                                     "properties": {
+                                        "producto": {
+                                            "$ref": "#/components/schemas/Productos"
+                                        },
                                         "msg": {
                                             "type": "string"
                                         }
@@ -275,37 +660,13 @@
                         }
                     },
                     "401": {
-                        "description": "Token incorrecto",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "example": {
-                                        "msg": "TOKEN NO ENCONTRADO"
-                                    }
-                                }
-                            }
-                        }
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/NoAdmin"
                     },
                     "500": {
-                        "description": "Ha habido un error en el servidor",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        "$ref": "#/components/responses/ServerError"
                     }
                 }
             }
@@ -389,37 +750,13 @@
                         }
                     },
                     "401": {
-                        "description": "Token incorrecto",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "example": {
-                                        "msg": "TOKEN NO ENCONTRADO"
-                                    }
-                                }
-                            }
-                        }
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/NoAdmin"
                     },
                     "500": {
-                        "description": "Ha habido un error en el servidor",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        "$ref": "#/components/responses/ServerError"
                     }
                 }
             }
@@ -462,8 +799,8 @@
                             }
                         }
                     },
-                    "401": {
-                        "description": "Token incorrecto",
+                    "400": {
+                        "description": "Si no se ha encontrado el producto a eliminar",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -472,16 +809,133 @@
                                         "msg": {
                                             "type": "string"
                                         }
-                                    },
-                                    "example": {
-                                        "msg": "TOKEN NO ENCONTRADO"
                                     }
                                 }
                             }
                         }
                     },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/NoAdmin"
+                    },
                     "500": {
-                        "description": "Ha habido un error en el servidor",
+                        "$ref": "#/components/responses/ServerError"
+                    }
+                }
+            }
+        },
+        "/getProductosFromUsuario": {
+            "post": {
+                "tags": [
+                    "Usuario - Productos"
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "summary": "Listado de productos de un usuario",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "usuarioId": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Listado de productos de un usuario",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "usuario_producto": {
+                                            "$ref": "#/components/schemas/Usuario_Productos"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/NoAdmin"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerError"
+                    }
+                }
+            }
+        },
+        "/updateProductoFromUsuario": {
+            "put": {
+                "tags": [
+                    "Usuario - Productos"
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "summary": "Listado de productos de un usuario",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "usuarioId": {
+                                        "type": "string"
+                                    },
+                                    "productoId": {
+                                        "type": "string"
+                                    },
+                                    "cantidad": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Listado de productos de un usuario",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "usuario_producto": {
+                                            "$ref": "#/components/schemas/Usuario_Productos"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "El producto o usuario no existen",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -494,6 +948,132 @@
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/NoAdmin"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerError"
+                    }
+                }
+            }
+        },
+        "/addProductoToUsuario": {
+            "put": {
+                "tags": [
+                    "Usuario - Productos"
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "summary": "Añade cierta cantidad de un producto a un usuario",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "usuarioId": {
+                                        "type": "string"
+                                    },
+                                    "productoId": {
+                                        "type": "string"
+                                    },
+                                    "cantidad": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Listado de productos de un usuario",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "usuario_producto": {
+                                            "$ref": "#/components/schemas/Usuario_Productos"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "El producto o usuario no existen",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/NoAdmin"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerError"
+                    }
+                }
+            }
+        },
+        "/deleteProductosFromUsuario": {
+            "delete": {
+                "tags": [
+                    "Usuario - Productos"
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "summary": "Elimina los productos de un usuario",
+                "responses": {
+                    "200": {
+                        "description": "Elimina los productos de un usuario",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/NoAdmin"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerError"
                     }
                 }
             }
@@ -525,6 +1105,93 @@
                         "format": "date"
                     }
                 }
+            },
+            "Usuarios": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "nombre": {
+                        "type": "string"
+                    },
+                    "apellidos": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "isAdmin": {
+                        "type": "integer"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date"
+                    }
+                }
+            },
+            "Usuario_Productos": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "usuarioId": {
+                        "type": "integer"
+                    },
+                    "productoId": {
+                        "type": "integer"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "producto": {
+                        "$ref": "#/components/schemas/Productos"
+                    }
+                }
+            },
+            "Error500": {
+                "type": "object",
+                "properties": {
+                    "msg": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Error401": {
+                "type": "object",
+                "properties": {
+                    "msg": {
+                        "type": "string"
+                    }
+                },
+                "example": {
+                    "msg": "TOKEN NO ENCONTRADO"
+                }
+            },
+            "Error403": {
+                "type": "object",
+                "properties": {
+                    "msg": {
+                        "type": "string"
+                    }
+                },
+                "example": {
+                    "msg": "El usuario: {email} NO es Administrador"
+                }
             }
         },
         "securitySchemes": {
@@ -532,6 +1199,38 @@
                 "type": "apiKey",
                 "in": "header",
                 "name": "token"
+            }
+        },
+        "responses": {
+            "ServerError": {
+                "descripcion": "Ha sucedido un error en el servidor",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error500"
+                        }
+                    }
+                }
+            },
+            "Unauthorized": {
+                "description": "Token incorrecto",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error401"
+                        }
+                    }
+                }
+            },
+            "NoAdmin": {
+                "description": "El usuario no es Administrador",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error403"
+                        }
+                    }
+                }
             }
         }
     },
@@ -543,6 +1242,14 @@
         {
             "name": "Producto",
             "description": "Paths en relación al manejo de los Productos"
+        },
+        {
+            "name": "Usuario",
+            "description": "Paths en relación al manejo de los Usuarios"
+        },
+        {
+            "name": "Usuario - Productos",
+            "description": "paths en relacion a los productos de un usuario"
         }
     ]
 }

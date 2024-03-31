@@ -49,7 +49,7 @@ function conectarDB(trys = 5) {
         console.log('Conectado a la base de datos');
     }).catch((err) => {
         if (trys > 0) {
-            console.log(`Fallo conexion a la BD, intento nº${trys}`);
+            console.log(`Fallo conexion a la BD, intentos restantes: ${trys-1}`);
             setTimeout(() => {
                 conectarDB(trys - 1);
             }, 20000);
